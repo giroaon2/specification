@@ -1,1 +1,96 @@
 https://phillip-th.atlassian.net/wiki/spaces/PD/pages/1126400167/BRD+Automated+Web+Scraping+for+US+Stock+Logos
+
+
+[BRD] Automated Web Scraping for US Stock Logos
+
+
+
+By Suwijakh
+
+1 min
+
+5
+
+Add a reaction
+App IconAdd approval
+1 ⭐ Executive Summary
+2 💡 Discovery
+3 ✅ Requirements
+4 🛠️ Delivery
+5 🔁 Post-launch
+6 ✅ Approval log
+7 🗒️ Update log
+⭐ Executive Summary
+Background & Problem Statement
+ปัจจุบันแอปพลิเคชัน Pocket มีความจำเป็นต้องอัปเดตไฟล์โลโก้หุ้นสหรัฐฯ (US Stocks) เพื่อยกระดับ UI/UX ให้สมบูรณ์ แต่การดึงข้อมูลหุ้นทั้งหมดในตลาดกว่า 10,000 ตัวรวดเดียวใช้เวลานานและมีความเสี่ยงสูง เราจึงโฟกัสที่กลุ่มหุ้นที่มีนัยสำคัญต่อ Volume การเทรดมากที่สุดก่อน นั่นคือดัชนี Russell 1000 (ครอบคลุมหุ้นใหญ่สุด 1,000 ตัวแรก)
+
+High-Level Concept & Functional Requirements (plain text, bullets, sketch, flow)
+พัฒนาระบบ Automation Script เพื่อเข้าถึงหน้า Stock Screener ของ TradingView สั่งการให้ Bot ทำการฟิลเตอร์ดัชนี Russell 1000 จัดการกับระบบเลื่อนหน้าจอ (Lazy Loading) เพื่อเก็บรายชื่อ Ticker ทั้ง 1,000 ตัว จากนั้นวิ่งเข้าไปดาวน์โหลดโลโก้ขนาดเต็มทีละตัว และจัดเก็บลงโฟลเดอร์แบบ Batching (100 รูป/โฟลเดอร์)
+
+High-Level User Story
+As a : Internal Team (Design & Dev)
+
+I want to :  ได้รับโฟลเดอร์ไฟล์โลโก้หุ้นกลุ่ม Russell 1000 จำนวน 10 โฟลเดอร์ (โฟลเดอร์ละ 100 รูป)
+
+So that : ฉันสามารถนำไฟล์ไป Bulk Import ลง Figma ได้ทันทีโดยเครื่องไม่ค้าง
+
+Acceptance Criteria:
+Bot สามารถจำลองการคลิก UI เพื่อฟิลเตอร์ดัชนี Russell 1000 บนหน้าเว็บได้
+
+Bot สามารถ Scroll หน้าจอเพื่อดึง Ticker มาได้ครบ 1,000 ตัว
+
+Bot ดาวน์โหลดภาพขนาดเต็ม (SVG) จากหน้า Profile ของหุ้น
+
+ระบบแบ่งเซฟไฟล์อัตโนมัติเป็น 10 โฟลเดอร์ โฟลเดอร์ละ 100 รูป
+
+💡 Discovery
+ต้องการ Asset โลโก้ที่ถูกต้องและอัปเดต โดยใช้เวลา Man-hour ของทีมให้น้อยที่สุด
+
+✅ Requirements
+Functional Requirements
+
+UI Interaction & Data Extraction (การจัดการหน้าตาราง)
+
+เข้าถึง URL: https://www.tradingview.com/screener/
+
+ให้ Bot คลิกปุ่ม Filter และเลือกเงื่อนไขดัชนีเป็น Russell 1000
+
+Dynamic Table Handling
+
+เขียน Logic ให้ Bot ทำการ Scroll Down ตารางลงมาเรื่อยๆ เพื่อให้หน้าเว็บโหลดรายชื่อหุ้น (Lazy Load) จนกว่าจะเก็บ Array ของ Ticker ได้ครบ 1,000 ตัว
+
+Image Scraping (การดาวน์โหลดรูปภาพ)
+
+สแกนหา Element ของรูปโลโก้ และดาวน์โหลดภาพขนาดเต็ม (SVG)
+
+Batching & Output Structure (การจัดการไฟล์)
+
+Bot ต้องสร้างโฟลเดอร์เพื่อจัดเก็บไฟล์ โดยตัดแบ่ง Batch ละ 100 รูป
+
+Folder Naming: 1-100, 101-200 ... จนถึง 901-1000
+
+File Naming: [TICKER].svg
+
+🛠️ Delivery
+IDR-89: [Pocket][Automate] Automated Web Scraping for US Stock Logos
+In Progress
+ 
+
+🔁 Post-launch
+Outcome review & notes (การประเมินผลลัพธ์หลังปล่อยระบบ)
+
+UX/UI Audit: ตรวจสอบหน้าจอแอปพลิเคชัน Pocket หลังจากการ Replace ไฟล์ ว่าการแสดงผลโลโก้ชุด Russell 1000 มีความคมชัด (ไม่แตก) และไม่ทำให้แอปพลิเคชันมีขนาดใหญ่ขึ้น (App Size Bloat) จนส่งผลกระทบต่อผู้ใช้งาน
+
+User Feedback: ติดตามผ่านทีม Customer Support ว่ายังมีลูกค้ารีพอร์ตเรื่อง "โลโก้หุ้นที่เทรดบ่อยหายไป" หรือไม่ เพื่อนำมาเป็นข้อมูลในการปรับปรุงรายชื่อหุ้นในเฟสถัดไป
+
+Related Backlog / Next Release Ideas (แผนการพัฒนาในอนาคต)
+
+การขยายขอบเขตข้อมูล (Data Expansion: Russell 2000 & Long-tail)
+
+Backlog: หลังจากโลโก้กลุ่มหุ้นใหญ่ (Russell 1000) นิ่งแล้ว ในเฟสถัดไป (Phase 2) จะพิจารณานำดัชนี Russell 2000 (หุ้นขนาดเล็ก) หรือหุ้นอื่นๆ ใน Universe มาให้ Automate Engineer รันสคริปต์ดึงเพิ่มเติม เพื่ออุดช่องโหว่ (Long-tail) ให้ลูกค้าแอป Pocket ได้ประสบการณ์ที่สมบูรณ์ 100%
+
+กำหนดความถี่ในการรันอัปเดต (Update Frequency & SLA)
+
+Backlog: กำหนดรอบ (SLA) สำหรับการรัน Automate Bot เพื่ออัปเดตโลโก้ (Refresh Cycle) เนื่องจากหุ้นมีการรีแบรนด์และมี IPO เข้าใหม่ตลอดเวลา
+
+การพิจารณาใช้ Third-Party Logo API ในระยะยาว (Future API Integration)
